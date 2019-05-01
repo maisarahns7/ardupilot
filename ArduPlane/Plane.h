@@ -610,6 +610,11 @@ private:
     AP_Parachute parachute{relay};
 #endif
 
+// Precision Landing
+#if PRECISION_LANDING == ENABLED
+    AC_PrecLand precland{ahrs};
+#endif
+
     // terrain handling
 #if AP_TERRAIN_AVAILABLE
     AP_Terrain terrain{ahrs, mission, rally};
@@ -802,6 +807,7 @@ private:
     void Log_Write_Vehicle_Startup_Messages();
     void Log_Write_AOA_SSA();
     void Log_Write_AETR();
+    void Log_Write_Precland();
 
     void load_parameters(void);
     void convert_mixers(void);
@@ -1026,6 +1032,12 @@ private:
     void parachute_release();
     bool parachute_manual_release();
 #endif
+
+#if PRECISION_LANDING == ENABLED
+    void init_precland();
+    void update_precland();
+#endif
+
 #if OSD_ENABLED == ENABLED
     void publish_osd_info();
 #endif

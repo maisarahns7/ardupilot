@@ -8,6 +8,7 @@
 #include <AC_Fence/AC_Fence.h>
 #include <AC_Avoidance/AC_Avoid.h>
 #include <AP_Proximity/AP_Proximity.h>
+#include <AC_PrecLand/AC_PrecLand.h>
 
 /*
   QuadPlane specific functionality
