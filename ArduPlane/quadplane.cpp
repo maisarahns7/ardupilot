@@ -1761,6 +1761,15 @@ void QuadPlane::vtol_position_controller(void)
         return;
     }
 
+#if PRECISION_LANDING == ENABLED
+    AC_PrecLand &precland = plane.precland;
+
+    const bool navigating = pos_control->is_active_xy();
+    bool doing_precision_landing = precland.target_acquired() && navigating;
+#else
+    bool doing_precision_landing = false;
+#endif
+
     setup_target_position();
 
     const Location &loc = plane.next_WP_loc;
@@ -1868,9 +1877,33 @@ void QuadPlane::vtol_position_controller(void)
 
     case QPOS_POSITION2:
     case QPOS_LAND_DESCEND:
+
+        
+
+        /////////////////////////////////////////////////////////////
+        // This is copied from Copter code, I believe it should    //
+        // probably be in this case of the switch statement        //
+        /////////////////////////////////////////////////////////////
+
         /*
-          for final land repositioning and descent we run the position controller
-         */
+        for final land repositioning and descent we run the position controller
+        */
+        if (doing_precision_landing) {
+            Vector2f target_pos, target_vel_rel;
+            if (!precland.get_target_position_cm(target_pos)) {
+                target_pos.x = inertial_nav.get_position().x;
+                target_pos.y = inertial_nav.get_position().y;
+            }
+            if (!precland.get_target_velocity_relative_cms(target_vel_rel)) {
+                target_vel_rel.x = -inertial_nav.get_velocity().x;
+                target_vel_rel.y = -inertial_nav.get_velocity().y;
+            }
+            pos_control->set_xy_target(target_pos.x, target_pos.y);
+            pos_control->override_vehicle_velocity_xy(-target_vel_rel);
+        }
+
+        /////////////////////////////////////////////////////////////
+
 
         // also run fixed wing navigation
         plane.nav_controller->update_waypoint(plane.prev_WP_loc, loc);
@@ -2576,19 +2609,6 @@ bool QuadPlane::do_user_takeoff(float takeoff_altitude)
     guided_start();
     guided_takeoff = true;
     return true;
-}
-
-// perform precision landing flag
-bool QuadPlane::do_precland(void)
-{
-    // check precland enabled and in descent stage of landing
-    // TODO: may need to add a stage between QPOS and DESCENT where it 
-    //       loiters for a duration to acquire target
-    if (plane.precland.enabled() &&
-        in_vtol_land_descent()) {
-            return true;
-        }
-    return false;
 }
 
 /*

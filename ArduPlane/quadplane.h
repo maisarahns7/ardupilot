@@ -113,9 +113,6 @@ public:
     
     // user initiated takeoff for guided mode
     bool do_user_takeoff(float takeoff_altitude);
-
-    // perform precision landing
-    bool do_precland(void);
     
     struct PACKED log_QControl_Tuning {
         LOG_PACKET_HEADER;

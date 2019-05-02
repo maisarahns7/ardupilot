@@ -17,6 +17,7 @@ def build(bld):
             'AP_Navigation',
             'AP_Parachute',
             'AC_PrecLand',
+            'AP_IRLock',
             'AP_RCMapper',
             'AP_SpdHgtControl',
             'AP_TECS',
