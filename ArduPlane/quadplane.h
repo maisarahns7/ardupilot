@@ -8,6 +8,7 @@
 #include <AC_Fence/AC_Fence.h>
 #include <AC_Avoidance/AC_Avoid.h>
 #include <AP_Proximity/AP_Proximity.h>
+#include <AP_IRLock/AP_IRLock.h>
 #include <AC_PrecLand/AC_PrecLand.h>
 
 /*
@@ -112,6 +113,9 @@ public:
     
     // user initiated takeoff for guided mode
     bool do_user_takeoff(float takeoff_altitude);
+
+    // perform precision landing
+    bool do_precland(void);
     
     struct PACKED log_QControl_Tuning {
         LOG_PACKET_HEADER;

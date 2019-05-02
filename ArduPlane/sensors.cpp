@@ -129,6 +129,13 @@ void Plane::update_sensor_status_flags(void)
         control_sensors_present |= MAV_SYS_STATUS_SENSOR_OPTICAL_FLOW;
     }
 #endif
+
+#if PRECISION_LANDING == ENABLED
+    if (precland.enabled()) {
+        control_sensors_present |= MAV_SYS_STATUS_SENSOR_VISION_POSITION;
+    }
+#endif
+
     if (geofence_present()) {
         control_sensors_present |= MAV_SYS_STATUS_GEOFENCE;
     }
@@ -244,6 +251,13 @@ void Plane::update_sensor_status_flags(void)
         control_sensors_health |= MAV_SYS_STATUS_SENSOR_OPTICAL_FLOW;
     }
 #endif
+
+#if PRECISION_LANDING == ENABLED
+    if (precland.enabled() && !precland.healthy()) {
+        control_sensors_health &= ~MAV_SYS_STATUS_SENSOR_VISION_POSITION;
+    }
+#endif
+
     if (!ins.get_gyro_health_all() || !ins.gyro_calibrated_ok_all()) {
         control_sensors_health &= ~MAV_SYS_STATUS_SENSOR_3D_GYRO;
     }

@@ -121,7 +121,8 @@ public:
         k_param_terrain_lookahead,
         k_param_fbwa_tdrag_chan,
         k_param_rangefinder_landing,
-        k_param_precland,   // TODO: is this okay?
+        k_param_precland, // TODO: this is added and will shift the enum vals, ask tridge
+        k_param_land_flap_percent,
         k_param_takeoff_flap_percent,
         k_param_flap_slewrate,
         k_param_rtl_autoland,

@@ -2578,6 +2578,19 @@ bool QuadPlane::do_user_takeoff(float takeoff_altitude)
     return true;
 }
 
+// perform precision landing flag
+bool QuadPlane::do_precland(void)
+{
+    // check precland enabled and in descent stage of landing
+    // TODO: may need to add a stage between QPOS and DESCENT where it 
+    //       loiters for a duration to acquire target
+    if (plane.precland.enabled() &&
+        in_vtol_land_descent()) {
+            return true;
+        }
+    return false;
+}
+
 /*
   return mav_type for heartbeat
  */
