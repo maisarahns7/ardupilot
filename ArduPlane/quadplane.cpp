@@ -1878,7 +1878,11 @@ void QuadPlane::vtol_position_controller(void)
     case QPOS_POSITION2:
     case QPOS_LAND_DESCEND:
 
-        
+        // also run fixed wing navigation
+        plane.nav_controller->update_waypoint(plane.prev_WP_loc, loc);
+        FALLTHROUGH;
+
+    case QPOS_LAND_FINAL:
 
         /////////////////////////////////////////////////////////////
         // This is copied from Copter code, I believe it should    //
@@ -1904,13 +1908,6 @@ void QuadPlane::vtol_position_controller(void)
 
         /////////////////////////////////////////////////////////////
 
-
-        // also run fixed wing navigation
-        plane.nav_controller->update_waypoint(plane.prev_WP_loc, loc);
-        FALLTHROUGH;
-
-    case QPOS_LAND_FINAL:
-
         // set position controller desired velocity and acceleration to zero
         pos_control->set_desired_velocity_xy(0.0f,0.0f);
         pos_control->set_desired_accel_xy(0.0f,0.0f);
@@ -1919,7 +1916,9 @@ void QuadPlane::vtol_position_controller(void)
         if (should_relax()) {
             loiter_nav->soften_for_landing();
         } else {
-            pos_control->set_xy_target(poscontrol.target.x, poscontrol.target.y);
+            if (!doing_precision_landing){
+                pos_control->set_xy_target(poscontrol.target.x, poscontrol.target.y);
+            }
         }
         pos_control->update_xy_controller(ekfNavVelGainScaler);
 
