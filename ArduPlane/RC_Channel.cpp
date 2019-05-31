@@ -66,7 +66,23 @@ void RC_Channel_Plane::do_aux_function(const aux_func_t ch_option, const aux_swi
         plane.reversed_throttle = (ch_flag == HIGH);
         gcs().send_text(MAV_SEVERITY_INFO, "RevThrottle: %s", plane.reversed_throttle?"ENABLE":"DISABLE");
         break;
-        
+
+    case AUX_FUNC::PRECISION_LOITER:
+#if PRECISION_LANDING == ENABLED
+        switch (ch_flag) {
+        case HIGH:
+            plane.quadplane.set_precision_loiter_enabled(true);
+            break;
+        case MIDDLE:
+            // nothing
+            break;
+        case LOW:
+            plane.quadplane.set_precision_loiter_enabled(false);
+            break;
+        }
+#endif
+        break;
+
     default:
         RC_Channel::do_aux_function(ch_option, ch_flag);
         break;
