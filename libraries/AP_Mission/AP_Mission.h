@@ -162,6 +162,12 @@ public:
         uint8_t target_state;
     };
 
+        // NAV_VTOL_LAND support
+    struct PACKED VTOL_Land {
+        int8_t num;
+        int8_t status;       
+    };
+
      // navigation delay command structure
     struct PACKED Navigation_Delay_Command {
         float seconds; // period of delay in seconds
@@ -243,6 +249,9 @@ public:
 
         // do vtol transition
         Do_VTOL_Transition do_vtol_transition;
+
+        // NAV_VTOL_LAND
+        VTOL_Land vtol_land;
 
         // DO_ENGINE_CONTROL
         Do_Engine_Control do_engine_control;
